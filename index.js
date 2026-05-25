@@ -27,9 +27,9 @@ async function run() {
     const db = client.db("docappoint");
     const appointmentCollection = db.collection("bookappointments");
 
-    app.get("/allAppoint", async (req, res) =>{
-      const result = await appointmentCollection.find().toArray()
-      res.json(res)
+     app.get("/bookappointment", async (req, res) => {
+      const result = await appointmentCollection.find().toArray();
+      res.json(result);
     })
 
     app.post("/bookappointment", async (req, res) => {
