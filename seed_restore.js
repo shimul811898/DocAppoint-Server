@@ -18,7 +18,7 @@ const doctors = [
     "availableDate": "2026-06-02",
     "availableTime": "10:30 AM",
     "description": "Experienced cardiologist for heart diseases and regular checkups.",
-    "imageUrl": "https://i.ibb.co/8D0Z8mK/doctor1.png",
+    "imageUrl": "https://www.bma.org.uk/media/7567/img-doctor-woman-reading-file-16x9.jpg?anchor=center&mode=crop&width=1920&height=900",
     "appointmentDate": "2026-06-02"
   },
   {
@@ -32,7 +32,7 @@ const doctors = [
     "availableDate": "2026-06-05",
     "availableTime": "02:00 PM",
     "description": "Expert in migraine, nerve disorders, and neurological treatments.",
-    "imageUrl": "https://i.ibb.co/F7m6V7M/doctor2.png",
+    "imageUrl": "https://static.vecteezy.com/system/resources/previews/026/375/249/non_2x/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg",
     "appointmentDate": "2026-06-05"
   },
   {
@@ -46,7 +46,7 @@ const doctors = [
     "availableDate": "2026-06-07",
     "availableTime": "11:15 AM",
     "description": "Professional skin care and allergy treatment specialist.",
-    "imageUrl": "https://i.ibb.co/k2G8W7L/doctor3.png",
+    "imageUrl": "https://static.vecteezy.com/system/resources/previews/026/375/416/non_2x/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg",
     "appointmentDate": "2026-06-07"
   },
   {
@@ -60,7 +60,7 @@ const doctors = [
     "availableDate": "2026-06-10",
     "availableTime": "04:00 PM",
     "description": "Specialist in bone, joint, and muscle-related treatments.",
-    "imageUrl": "https://i.ibb.co/Y0b5L8n/doctor4.png",
+    "imageUrl": "https://static.vecteezy.com/system/resources/previews/026/376/483/non_2x/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg",
     "appointmentDate": "2026-06-10"
   },
   {
@@ -74,7 +74,7 @@ const doctors = [
     "availableDate": "2026-06-12",
     "availableTime": "09:00 AM",
     "description": "Dedicated child healthcare and pediatric consultation expert.",
-    "imageUrl": "https://i.ibb.co/JqXx5xM/doctor5.png",
+    "imageUrl": "https://static.vecteezy.com/system/resources/previews/026/376/471/non_2x/ai-generative-portrait-of-a-smiling-female-doctor-standing-with-arms-crossed-in-the-office-photo.jpg",
     "appointmentDate": "2026-06-12"
   },
   {
@@ -88,7 +88,7 @@ const doctors = [
     "availableDate": "2026-06-14",
     "availableTime": "01:30 PM",
     "description": "ENT expert for sinus, throat, and hearing issues.",
-    "imageUrl": "https://i.ibb.co/0jQK9xM/doctor6.png",
+    "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/036/338/907/small_2x/ai-generated-young-female-doctor-holding-blank-banner-in-clinical-setting-photo.jpg",
     "appointmentDate": "2026-06-14"
   },
   {
@@ -102,7 +102,7 @@ const doctors = [
     "availableDate": "2026-06-16",
     "availableTime": "03:45 PM",
     "description": "Women's healthcare and pregnancy specialist.",
-    "imageUrl": "https://i.ibb.co/9v8h6s4/doctor7.png",
+    "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/026/376/618/small_2x/ai-generative-portrait-of-confident-male-doctor-in-white-coat-and-stethoscope-standing-with-arms-crossed-and-looking-at-camera-photo.jpg",
     "appointmentDate": "2026-06-16"
   },
   {
@@ -116,7 +116,7 @@ const doctors = [
     "availableDate": "2026-06-18",
     "availableTime": "12:00 PM",
     "description": "Eye care, vision testing, and treatment specialist.",
-    "imageUrl": "https://i.ibb.co/3m8gL6K/doctor8.png",
+    "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/046/837/167/small_2x/confident-southeast-asian-female-doctor-in-white-coat-with-stethoscope-in-modern-medical-office-photo.jpg",
     "appointmentDate": "2026-06-18"
   },
   {
@@ -130,8 +130,25 @@ const doctors = [
     "availableDate": "2026-06-20",
     "availableTime": "05:15 PM",
     "description": "Mental health expert for anxiety, stress, and depression care.",
-    "imageUrl": "https://i.ibb.co/QX1b2dM/doctor9.png",
+    "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/046/837/277/small_2x/confident-southeast-asian-male-doctor-in-modern-hospital-setting-with-medical-instruments-for-professional-healthcare-services-and-patient-care-photo.jpg",
     "appointmentDate": "2026-06-20"
   }
 ];
 
+async function seed() {
+  try {
+    await client.connect();
+    const db = client.db("docappoint");
+    const doctorsCollection = db.collection("doctors");
+
+    await doctorsCollection.deleteMany({});
+    const result = await doctorsCollection.insertMany(doctors);
+    console.log(`Seeded ${result.insertedCount} doctors with updated image URLs!`);
+  } catch (err) {
+    console.error("Seed error:", err);
+  } finally {
+    await client.close();
+  }
+}
+
+seed();
