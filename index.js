@@ -61,6 +61,14 @@ async function run() {
       res.json(result);
     });
 
+     app.patch("/appointments/:id", async (req, res) => {
+      const result = await appointmentCollection.updateOne(
+        { _id: new ObjectId(req.params.id) },
+        { $set: req.body }
+      );
+      res.json(result);
+    });
+
     app.get("/bookappointment/:id", async (req, res) => {
       const { id } = req.params
       let result = await appointmentCollection.findOne({ _id: new ObjectId(id) })
