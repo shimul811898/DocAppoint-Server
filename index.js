@@ -1,3 +1,5 @@
+const dns = require('node:dns');
+dns.setDefaultResultOrder('ipv4first');
 const express = require("express");
 const dontenv = require("dotenv");
 const cors = require("cors");
@@ -61,10 +63,17 @@ async function run() {
       res.json(result);
     });
 
-     app.patch("/appointments/:id", async (req, res) => {
+    app.patch("/appointments/:id", async (req, res) => {
       const result = await appointmentCollection.updateOne(
         { _id: new ObjectId(req.params.id) },
         { $set: req.body }
+      );
+      res.json(result);
+    });
+
+    app.delete("/appointments/:id", async (req, res) => {
+      const result = await appointmentCollection.deleteOne(
+        { _id: new ObjectId(req.params.id) }
       );
       res.json(result);
     });
