@@ -4,6 +4,7 @@ const express = require("express");
 const dontenv = require("dotenv");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const { createRemoteJWKSet, jwtVerify } = require('jose-cjs');
 
 dontenv.config();
 const uri = process.env.MONGODB_URI;
@@ -23,7 +24,11 @@ const client = new MongoClient(uri, {
   },
 });
 
-const verifyToken = (req, res, next) => {
+const JWKS = createRemoteJWKSet(
+  new URL(`${process.env.CLIENT_URL}/api/auth/jwks`)
+)
+
+const verifyToken = async(req, res, next) => {
   const authHeader = req?.headers.authorization;
   if(!authHeader){
     return res.status(401).json({message:
@@ -34,12 +39,20 @@ const verifyToken = (req, res, next) => {
      return res.status(401).json({message:
       "Unauthorized"})
   }
-  next()
+   try {
+       const {payload} = await jwtVerify(token, JWKS)
+        console.log(payload)
+         next()
+   } catch (error) {
+      return res.status(401).json({message:
+      "Forbidden"})
+   }
+
 }
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
     const db = client.db("docappoint");
     const appointmentCollection = db.collection("bookappointments");
     const doctorsCollection = db.collection("doctors");
@@ -111,7 +124,7 @@ async function run() {
     })
 
 
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment.You successfully connect to MongoDB"
     );
