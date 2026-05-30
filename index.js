@@ -78,7 +78,17 @@ async function run() {
       res.json(result);
     });
 
-    app.get("/bookappointment/:id", async (req, res) => {
+    app.get("/bookappointment/:id",(req, res, next)=>{
+      const header = req.headers.authorization
+      if(header === "logged in"){
+          next()
+      } else{
+        res.status(401).json({message: "Unauthorized"})
+      }
+     
+
+    },
+       async (req, res) => {
       const { id } = req.params
       let result = await appointmentCollection.findOne({ _id: new ObjectId(id) })
       if (!result) {
