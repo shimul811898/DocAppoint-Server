@@ -23,6 +23,20 @@ const client = new MongoClient(uri, {
   },
 });
 
+const verifyToken = (req, res, next) => {
+  const authHeader = req?.headers.authorization;
+  if(!authHeader){
+    return res.status(401).json({message:
+      "Unauthorized"})
+  }
+  const token = authHeader.split(" ")[1];
+  if(!token){
+     return res.status(401).json({message:
+      "Unauthorized"})
+  }
+  next()
+}
+
 async function run() {
   try {
     await client.connect();
@@ -78,17 +92,7 @@ async function run() {
       res.json(result);
     });
 
-    app.get("/bookappointment/:id",(req, res, next)=>{
-      const header = req.headers.authorization
-      if(header === "logged in"){
-          next()
-      } else{
-        res.status(401).json({message: "Unauthorized"})
-      }
-     
-
-    },
-       async (req, res) => {
+    app.get("/bookappointment/:id",verifyToken, async (req, res) => {
       const { id } = req.params
       let result = await appointmentCollection.findOne({ _id: new ObjectId(id) })
       if (!result) {
